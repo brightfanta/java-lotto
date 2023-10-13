@@ -16,7 +16,7 @@ public class Application {
 
         //당첨번호 입력받기
         getWinnigNumbers(winningNumbers);
-        System.out.println("winningNumbers is " + winningNumbers.toString());
+        System.out.println("winningNumbers is " + winningNumbers);
 
 
         //보너스번호 입력받기

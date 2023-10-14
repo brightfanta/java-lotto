@@ -48,11 +48,11 @@ public class Application {
         getMatchingCnt(winningNumbers, matchingNumCnt, lotteries);
         System.out.println("matchingNumCnt = " + matchingNumCnt);
 
-        //로또와 보너스 번호 비교
+        //로또와 보너스 번호 비교 후 2, 3등 산출
         for (Integer matchCnt : matchingNumCnt) {
             if (matchCnt == 5) {
 
-                bonusNumMatchingCnt(bonusNumber, lotteries);
+                bonusNumMatchingCnt(bonusNumber, matchingNumCnt, lotteries);
             }
         }
 
@@ -82,12 +82,14 @@ public class Application {
         System.out.println("matchingNumCnt = " + matchingNumCnt);
     }
 
-    private static void bonusNumMatchingCnt(Integer bonusNumber, Lotto[] lotteries) {
+    private static void bonusNumMatchingCnt(Integer bonusNumber, List<Integer> matchingNumCnt, Lotto[] lotteries) {
+        int listCntTemp = 0;
         for (Lotto lottery : lotteries) {
+
             if (lottery.getNumbers().contains(bonusNumber)) {
-//                bonusCnt.add(1);
-                //2등 출력
+                matchingNumCnt.set(listCntTemp, 7);
             }
+            listCntTemp++;
         }
     }
 
@@ -118,4 +120,6 @@ public class Application {
             winningNumbers.add(Integer.parseInt(winningNum.split(",")[i]));
         }
     }
+
+
 }

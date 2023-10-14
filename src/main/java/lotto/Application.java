@@ -6,6 +6,8 @@ import camp.nextstep.edu.missionutils.Randoms;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class Application {
     public static void main(String[] args) {
@@ -14,10 +16,13 @@ public class Application {
         String bonusNum;
         Integer bonusNumber;
         List<Integer> winningNumbers = new ArrayList<>();
+        List<Integer> matchingNumsTemp = new ArrayList<>();
         Integer lotteryCnt = 0;
+        List<Integer> bonusCnt = new ArrayList<>();
+        List<Integer> matchingNumCnt = new ArrayList<>();
 
         //당첨번호 입력받기
-        getWinnigNumbers(winningNumbers);
+        getWinningNumbers(winningNumbers);
         /*System.out.println("winningNumbers is " + winningNumbers);//전체 출력 시 toString() 메서드 필요 없음
         for (Integer winningNumber : winningNumbers) {
             System.out.println("winningNumber = " + winningNumber);
@@ -27,13 +32,52 @@ public class Application {
         bonusNumber = getBonusNumber();
         /*System.out.println("bonusNumber = " + bonusNumber);*/
 
-//        lotteryCnt = 8;
+        lotteryCnt = 8;
         //로또 생성
-        Lotto[] lottos = new Lotto[lotteryCnt];
-        generateLottos(lotteryCnt, lottos);
+        Lotto[] lotteries = new Lotto[lotteryCnt];
 
-        for (Lotto lotto : lottos) {
+
+        generateLottos(lotteryCnt, lotteries);
+
+        //로또와 당첨 번호 비교
+        getMatchingCnt(winningNumbers, matchingNumCnt, lotteries);
+        System.out.println("matchingNumCnt = " + matchingNumCnt);
+
+        //로또와 보너스 번호 비교
+        for (Integer matchCnt : matchingNumCnt) {
+            if (matchCnt == 5) {
+
+                bonusNumMatchingCnt(bonusNumber, bonusCnt, lotteries);
+            }
+        }
+
+
+    }
+
+    private static void getMatchingCnt(List<Integer> winningNumbers, List<Integer> matchingNumCnt, Lotto[] lotteries) {
+
+
+        for (Lotto lotto : lotteries) {
             System.out.println("lotto = " + lotto.getNumbers());
+//            System.out.println("winningNumbers = " + winningNumbers);
+
+//            matchingNumsTemp = winningNumbers; // 주소를 참조하는구나 값 자체가 아니라
+            List<Integer> matchingNumsTemp = new ArrayList<>(winningNumbers);
+//            System.out.println("matchingNumsTemp injected = " + matchingNumsTemp);
+            matchingNumsTemp.retainAll(lotto.getNumbers());
+//            System.out.println("after matchingNumsTemp = " + matchingNumsTemp);
+            matchingNumCnt.add(matchingNumsTemp.size());
+
+        }
+        System.out.println("matchingNumCnt = " + matchingNumCnt);
+    }
+
+    private static void bonusNumMatchingCnt(Integer bonusNumber, List<Integer> bonusCnt, Lotto[] lotteries) {
+        for (Lotto lottery : lotteries) {
+            if (lottery.getNumbers().contains(bonusNumber)) {
+//                bonusCnt.add(1);
+                //2등 출력
+            }
         }
     }
 
@@ -56,7 +100,7 @@ public class Application {
         return Integer.parseInt(bonusNum);
     }
 
-    private static void getWinnigNumbers(List<Integer> winningNumbers) {
+    private static void getWinningNumbers(List<Integer> winningNumbers) {
         String winningNum;
         winningNum = Console.readLine();
         for (int i = 0; i < 6; i++) {

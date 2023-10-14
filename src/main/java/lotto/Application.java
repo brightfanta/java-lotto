@@ -61,7 +61,6 @@ public class Application {
         System.out.println("---");
 
 
-
     }
 
     private static void getMatchingCnt(List<Integer> winningNumbers, List<Integer> matchingNumCnt, Lotto[] lotteries) {
@@ -121,5 +120,47 @@ public class Application {
         }
     }
 
+    public enum rank{
+        first(2_000_000_000)    {
+            @Override
+            int totalPrize(int lottoMatchedCnt) {
+                return prize * lottoMatchedCnt;
+            }
+        },
+        second(30_000_000)   {
+            @Override
+            int totalPrize(int lottoMatchedCnt) {
+                return prize * lottoMatchedCnt;
+            }
+        },
+        third(1_500_000)    {
+            @Override
+            int totalPrize(int lottoMatchedCnt) {
+                return prize * lottoMatchedCnt;
+            }
+        },
+        fourth(50_000)   {
+            @Override
+            int totalPrize(int lottoMatchedCnt) {
+                return prize * lottoMatchedCnt;
+            }
+        },
+        fifth(5_000)    {
+            @Override
+            int totalPrize(int lottoMatchedCnt) {
+                return prize * lottoMatchedCnt;
+            }
+        };
+
+
+        protected final int prize;
+
+        rank(int prize) {
+            this.prize = prize;
+        }
+
+        abstract int totalPrize(int lottoMatchedCnt);
+
+    }
 
 }

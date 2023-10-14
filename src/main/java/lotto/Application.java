@@ -3,7 +3,9 @@ package lotto;
 import camp.nextstep.edu.missionutils.Console;
 import camp.nextstep.edu.missionutils.Randoms;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -22,6 +24,7 @@ public class Application {
         //로또 구입금액 입력
         System.out.println("구입금액을 입력해 주세요.");
         budgetInput = Console.readLine();
+        System.out.println();
         budget = Integer.parseInt(budgetInput);
         lotteryCnt = budget / 1000;
 
@@ -59,6 +62,17 @@ public class Application {
         //당첨통계
         System.out.println("당첨 통계");
         System.out.println("---");
+
+        DecimalFormat df = new DecimalFormat("###,###");
+
+        System.out.println("3개 일치 (" + df.format(rank.fifth.prize) +"원) - " + Collections.frequency(matchingNumCnt, 3) + "개");
+        System.out.println("4개 일치 (" + df.format(rank.fourth.prize) +"원) - " + Collections.frequency(matchingNumCnt, 4) + "개");
+        System.out.println("5개 일치 (" + df.format(rank.third.prize) +"원) - " + Collections.frequency(matchingNumCnt, 5) + "개");
+        System.out.println("5개 일치, 보너스볼 일치 (" + df.format(rank.second.prize) +"원) - " + Collections.frequency(matchingNumCnt, 7) + "개");
+        System.out.println("5개 일치 (" + df.format(rank.first.prize) +"원) - " + Collections.frequency(matchingNumCnt, 6) + "개");
+
+
+
 
 
     }
@@ -102,12 +116,15 @@ public class Application {
 
             //오름차순으로 정렬된 숫자로 Lotto 객체에 입력
             lottos[i] = new Lotto(numbers);
+            System.out.println(lottos[i].getNumbers());
         }
+        System.out.println();
     }
 
     private static Integer getBonusNumber() {
         String bonusNum;
         bonusNum = Console.readLine();
+        System.out.println();
         return Integer.parseInt(bonusNum);
     }
 
@@ -118,22 +135,12 @@ public class Application {
 
             winningNumbers.add(Integer.parseInt(winningNum.split(",")[i]));
         }
+        System.out.println();
     }
 
+
     public enum rank{
-        first(2_000_000_000)    {
-            @Override
-            int totalPrize(int lottoMatchedCnt) {
-                return prize * lottoMatchedCnt;
-            }
-        },
-        second(30_000_000)   {
-            @Override
-            int totalPrize(int lottoMatchedCnt) {
-                return prize * lottoMatchedCnt;
-            }
-        },
-        third(1_500_000)    {
+        fifth(5_000)    {
             @Override
             int totalPrize(int lottoMatchedCnt) {
                 return prize * lottoMatchedCnt;
@@ -145,13 +152,25 @@ public class Application {
                 return prize * lottoMatchedCnt;
             }
         },
-        fifth(5_000)    {
+        third(1_500_000)    {
             @Override
             int totalPrize(int lottoMatchedCnt) {
                 return prize * lottoMatchedCnt;
             }
-        };
-
+        },
+        second(30_000_000)   {
+            @Override
+            int totalPrize(int lottoMatchedCnt) {
+                return prize * lottoMatchedCnt;
+            }
+        },
+        first(2_000_000_000)    {
+            @Override
+            int totalPrize(int lottoMatchedCnt) {
+                return prize * lottoMatchedCnt;
+            }
+        }
+        ;
 
         protected final int prize;
 

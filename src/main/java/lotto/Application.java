@@ -6,22 +6,32 @@ import camp.nextstep.edu.missionutils.Randoms;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
+
 
 public class Application {
     public static void main(String[] args) {
         // TODO: 프로그램 구현
-        String winningNum; // int, Integer, String
-        String bonusNum;
+
         Integer bonusNumber;
         List<Integer> winningNumbers = new ArrayList<>();
-        List<Integer> matchingNumsTemp = new ArrayList<>();
-        Integer lotteryCnt = 0;
-        List<Integer> bonusCnt = new ArrayList<>();
+        Integer lotteryCnt;
         List<Integer> matchingNumCnt = new ArrayList<>();
+        String budgetInput;
+        Integer budget;
+
+        //로또 구입금액 입력
+        System.out.println("구입금액을 입력해 주세요.");
+        budgetInput = Console.readLine();
+        budget = Integer.parseInt(budgetInput);
+        lotteryCnt = budget / 1000;
+
+        //로또 생성
+        System.out.println(lotteryCnt + "개를 구매했습니다.");
+        Lotto[] lotteries = new Lotto[lotteryCnt];
+        generateLottos(lotteryCnt, lotteries);
 
         //당첨번호 입력받기
+        System.out.println("당첨 번호를 입력해 주세요.");
         getWinningNumbers(winningNumbers);
         /*System.out.println("winningNumbers is " + winningNumbers);//전체 출력 시 toString() 메서드 필요 없음
         for (Integer winningNumber : winningNumbers) {
@@ -29,15 +39,10 @@ public class Application {
         }*/
 
         //보너스번호 입력받기
+        System.out.println("보너스 번호를 입력해 주세요.");
         bonusNumber = getBonusNumber();
         /*System.out.println("bonusNumber = " + bonusNumber);*/
 
-        lotteryCnt = 8;
-        //로또 생성
-        Lotto[] lotteries = new Lotto[lotteryCnt];
-
-
-        generateLottos(lotteryCnt, lotteries);
 
         //로또와 당첨 번호 비교
         getMatchingCnt(winningNumbers, matchingNumCnt, lotteries);
@@ -47,9 +52,14 @@ public class Application {
         for (Integer matchCnt : matchingNumCnt) {
             if (matchCnt == 5) {
 
-                bonusNumMatchingCnt(bonusNumber, bonusCnt, lotteries);
+                bonusNumMatchingCnt(bonusNumber, lotteries);
             }
         }
+
+        //당첨통계
+        System.out.println("당첨 통계");
+        System.out.println("---");
+
 
 
     }
@@ -72,7 +82,7 @@ public class Application {
         System.out.println("matchingNumCnt = " + matchingNumCnt);
     }
 
-    private static void bonusNumMatchingCnt(Integer bonusNumber, List<Integer> bonusCnt, Lotto[] lotteries) {
+    private static void bonusNumMatchingCnt(Integer bonusNumber, Lotto[] lotteries) {
         for (Lotto lottery : lotteries) {
             if (lottery.getNumbers().contains(bonusNumber)) {
 //                bonusCnt.add(1);

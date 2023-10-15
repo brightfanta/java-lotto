@@ -17,8 +17,8 @@ public class Application {
         List<Integer> matchingNumCnt = new ArrayList<>();
         String budgetInput;
         Integer budget;
-        double earningsPerBudgetRound = 0.0;
-        boolean exceptionCheck = true;
+        double earningsPerBudgetRound;
+        boolean exceptionCheck;
 
         //로또 구입금액 입력
         System.out.println("구입금액을 입력해 주세요.");
@@ -88,7 +88,7 @@ public class Application {
     }
 
     private static double getEarningsPerBudget(List<Integer> matchingNumCnt, Integer budget) {
-        Integer earnings = 0;
+        int earnings = 0;
         int idxTemp = 0;
 
         for (Rank rank : Rank.values()) {

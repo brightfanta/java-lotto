@@ -4,10 +4,7 @@ import camp.nextstep.edu.missionutils.Console;
 import camp.nextstep.edu.missionutils.Randoms;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 
 public class Application {
@@ -53,11 +50,13 @@ public class Application {
 
         //로또와 보너스 번호 비교 후 2, 3등 산출
         for (Integer matchCnt : matchingNumCnt) {
+            int bonusIdx = 0;
             if (matchCnt == 5) {
-
+                bonusIdx = matchingNumCnt.indexOf(matchCnt);
                 bonusNumMatchingCnt(bonusNumber, matchingNumCnt, lotteries);
             }
         }
+        System.out.println();
 
         //당첨통계
         System.out.println("당첨 통계");
@@ -65,14 +64,37 @@ public class Application {
 
         DecimalFormat df = new DecimalFormat("###,###");
 
-        System.out.println("3개 일치 (" + df.format(rank.fifth.prize) +"원) - " + Collections.frequency(matchingNumCnt, 3) + "개");
-        System.out.println("4개 일치 (" + df.format(rank.fourth.prize) +"원) - " + Collections.frequency(matchingNumCnt, 4) + "개");
-        System.out.println("5개 일치 (" + df.format(rank.third.prize) +"원) - " + Collections.frequency(matchingNumCnt, 5) + "개");
-        System.out.println("5개 일치, 보너스볼 일치 (" + df.format(rank.second.prize) +"원) - " + Collections.frequency(matchingNumCnt, 7) + "개");
-        System.out.println("5개 일치 (" + df.format(rank.first.prize) +"원) - " + Collections.frequency(matchingNumCnt, 6) + "개");
 
+        for (Rank rank : Rank.values()) {
 
+            if (rank.id < 3) {
 
+                System.out.println((rank.id + 3) + "개 일치 (" + df.format(rank.prize) + "원) - " + Collections.frequency(matchingNumCnt, (rank.id + 3)) + "개");
+            }
+
+            if (rank.id == 3) {
+
+                System.out.println((rank.id + 2) + "개 일치, 보너스볼 일치 (" + df.format(rank.prize) + "원) - " + Collections.frequency(matchingNumCnt, 7) + "개");
+            }
+
+            if (rank.id > 3) {
+
+                System.out.println((rank.id + 2) + "개 일치 (" + df.format(rank.prize) + "원) - " + Collections.frequency(matchingNumCnt, (rank.id + 2)) + "개");
+            }
+        }
+
+        double earningsPerBudget = 0;
+
+        Integer earnings = 0;
+        for (Rank rank : Rank.values()) {
+            int idxTemp = 0;
+            earnings += rank.totalPrize(Collections.frequency(matchingNumCnt, idxTemp + 3));
+            idxTemp++;
+        }
+
+        earningsPerBudget = (earnings)/budget;
+// earningsPerBudget += ();
+        //반복문 종료 후 나눗셈해서 수익률 계산하기
 
 
     }
@@ -89,17 +111,26 @@ public class Application {
 //            System.out.println("matchingNumsTemp injected = " + matchingNumsTemp);
             matchingNumsTemp.retainAll(lotto.getNumbers());
 //            System.out.println("after matchingNumsTemp = " + matchingNumsTemp);
-            matchingNumCnt.add(matchingNumsTemp.size());
 
+            //2등 count를 위해 한 자리 만듦(1등을 7로 옮김)
+            if (matchingNumsTemp.size() == 6) {
+                matchingNumCnt.add(matchingNumsTemp.size() + 1);
+            }
+
+            if (matchingNumsTemp.size() != 6) {
+                matchingNumCnt.add(matchingNumsTemp.size());
+            }
+            //matchingNumCnt는 0~5, 7의 값을 갖는다.
         }
         System.out.println("matchingNumCnt = " + matchingNumCnt);
     }
 
     private static void bonusNumMatchingCnt(Integer bonusNumber, List<Integer> matchingNumCnt, Lotto[] lotteries) {
-        int listCntTemp = 0;
-        for (Lotto lottery : lotteries) {
 
-            if (lottery.getNumbers().contains(bonusNumber)) {
+        int listCntTemp = 0;
+
+        for (Lotto lottery : lotteries) {
+            if (lottery.getNumbers().contains(bonusNumber) && matchingNumCnt.get(listCntTemp) == 5) {
                 matchingNumCnt.set(listCntTemp, 7);
             }
             listCntTemp++;
@@ -139,32 +170,32 @@ public class Application {
     }
 
 
-    public enum rank{
-        fifth(5_000)    {
+    public enum Rank {
+        fifth(5_000, 0)    {
             @Override
             int totalPrize(int lottoMatchedCnt) {
                 return prize * lottoMatchedCnt;
             }
         },
-        fourth(50_000)   {
+        fourth(50_000, 1)   {
             @Override
             int totalPrize(int lottoMatchedCnt) {
                 return prize * lottoMatchedCnt;
             }
         },
-        third(1_500_000)    {
+        third(1_500_000, 2)    {
             @Override
             int totalPrize(int lottoMatchedCnt) {
                 return prize * lottoMatchedCnt;
             }
         },
-        second(30_000_000)   {
+        second(30_000_000, 3)   {
             @Override
             int totalPrize(int lottoMatchedCnt) {
                 return prize * lottoMatchedCnt;
             }
         },
-        first(2_000_000_000)    {
+        first(2_000_000_000, 4)    {
             @Override
             int totalPrize(int lottoMatchedCnt) {
                 return prize * lottoMatchedCnt;
@@ -173,13 +204,22 @@ public class Application {
         ;
 
         protected final int prize;
+        protected final int id;
 
-        rank(int prize) {
+        Rank(int prize, int id) {
             this.prize = prize;
+            this.id = id;
         }
 
         abstract int totalPrize(int lottoMatchedCnt);
 
+        public int getPrize() {
+            return prize;
+        }
+
+        public int getId() {
+            return id;
+        }
     }
 
 }
